@@ -6,5 +6,5 @@ import com.book.bookManagementSystem.model.Book;
 
 @Repository
 public interface BookRepository extends MongoRepository<Book, String> {
-
+    // No need to add methods unless you want custom queries e.g. List<Book> findByAuthor(String author);
 }

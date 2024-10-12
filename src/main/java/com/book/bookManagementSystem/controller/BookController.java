@@ -3,9 +3,7 @@ package com.book.bookManagementSystem.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.book.bookManagementSystem.model.Book;
 import com.book.bookManagementSystem.service.BookService;
@@ -19,5 +17,10 @@ public class BookController {
     @GetMapping
     public List<Book> getAllBooks(){
         return bookService.getAllBooks();
+    }
+
+    @PostMapping
+    public Book createBook(@RequestBody Book book){
+        return bookService.createBook(book);
     }
 }
