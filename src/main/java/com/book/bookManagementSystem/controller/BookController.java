@@ -1,7 +1,9 @@
 package com.book.bookManagementSystem.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+import com.book.bookManagementSystem.dto.BookDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.repository.Update;
 import org.springframework.http.ResponseEntity;
@@ -17,21 +19,52 @@ public class BookController {
     private BookService bookService;
 
     @GetMapping
-    public List<Book> getAllBooks(){
-        return bookService.getAllBooks();
+    public List<BookDTO> getAllBooks() {
+        return bookService.getAllBooks().stream()
+                .map(book -> new BookDTO(
+                        book.getTitle(),
+                        book.getDescription(),
+                        book.getAuthor(),
+                        book.getGenre(),
+                        book.getYearPublished()
+                ))
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/author/{authorName}")
-    public List<Book> findBooksByAuthor(@PathVariable String authorName){
-        return bookService.findBooksByAuthor(authorName);
+    public List<BookDTO> findBooksByAuthor(@PathVariable String authorName){
+        return bookService.findBooksByAuthor(authorName).stream()
+                .map(book -> new BookDTO(
+                        book.getTitle(),
+                        book.getDescription(),
+                        book.getAuthor(),
+                        book.getGenre(),
+                        book.getYearPublished()
+                ))
+                .collect(Collectors.toList());
     }
 
     @PostMapping
-    public Book createBook(@RequestBody Book book){
-        return bookService.createBook(book);
+    public ResponseEntity<BookDTO> createBook(@RequestBody BookDTO bookDTO){
+        Book book = new Book();
+        book.setTitle(bookDTO.getTitle());
+        book.setDescription(bookDTO.getDescription());
+        book.setAuthor(bookDTO.getAuthor());
+        book.setGenre(bookDTO.getGenre());
+        book.setYearPublished(bookDTO.getYearPublished());
+
+        Book createdBook = bookService.createBook(book);
+
+        return ResponseEntity.ok(new BookDTO(
+                createdBook.getTitle(),
+                createdBook.getDescription(),
+                createdBook.getAuthor(),
+                createdBook.getGenre(),
+                createdBook.getYearPublished()
+        ));
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}") // DTO is not required because it is just a delete data
     public  String deleteBookById(@PathVariable String id ){
         boolean isDeleted = bookService.deleteBookById(id);
         if(isDeleted){
@@ -42,10 +75,17 @@ public class BookController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Book> updateBook(@PathVariable String id, @RequestBody Book bookDetails){
-        Book updatedBook = bookService.updateBook(id, bookDetails);
+    public ResponseEntity<BookDTO> updateBook(@PathVariable String id, @RequestBody BookDTO bookDTO){
+        Book updatedBook = bookService.updateBook(id, bookDTO);
         if (updatedBook != null){
-            return ResponseEntity.ok(updatedBook);
+            BookDTO updatedBookDTO = new BookDTO(
+                    updatedBook.getTitle(),
+                    updatedBook.getDescription(),
+                    updatedBook.getAuthor(),
+                    updatedBook.getGenre(),
+                    updatedBook.getYearPublished()
+            );
+            return ResponseEntity.ok(updatedBookDTO);
         }else{
             return ResponseEntity.notFound().build();
         }
