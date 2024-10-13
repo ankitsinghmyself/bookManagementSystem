@@ -52,7 +52,7 @@ public class Book {
     public void setGenre(String genre) {
         this.genre = genre;
     }
-    public int getYearPublished() {
+    public Integer getYearPublished() {
         return yearPublished;
     }
     public void setYearPublished(int yearPublished) {
