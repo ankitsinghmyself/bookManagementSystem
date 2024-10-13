@@ -38,6 +38,9 @@ public class BookService {
         return bookRepository.findAll();
     }
 
+    public List<Book> findBooksByAuthor(String author){
+        return bookRepository.findByAuthorContaining(author);
+    }
     public Book createBook(Book book) {
         return bookRepository.save(book); // save to mongo
     }
