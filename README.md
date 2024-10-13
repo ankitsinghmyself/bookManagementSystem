@@ -1,7 +1,7 @@
 
 # Book Management System API
 
-This project is a Book Management System built with Spring Boot, MongoDB, and React. The API allows you to perform CRUD operations (Create, Read, Update, Delete) on books.
+This project is a Book Management System built with Spring Boot, MongoDB, and React. The API lets you perform CRUD operations (Create, Read, Update, Delete) on books.
 
 ## Prerequisites
 
@@ -133,7 +133,7 @@ This project is a Book Management System built with Spring Boot, MongoDB, and Re
 ## MongoDB Setup
 
 1. Install and run MongoDB.
-2. Create a database called `bookdb`.
+2. Create a database called `bookstore`.
 3. The `Book` data will be automatically stored when you interact with the API.
 
 ## Conclusion
