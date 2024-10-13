@@ -4,8 +4,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.book.bookManagementSystem.dto.BookDTO;
+import com.book.bookManagementSystem.dto.DeleteBookResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.repository.Update;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -64,15 +66,19 @@ public class BookController {
         ));
     }
 
-    @DeleteMapping("/delete/{id}") // DTO is not required because it is just a delete data
-    public  String deleteBookById(@PathVariable String id ){
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<DeleteBookResponseDTO> deleteBookById(@PathVariable String id) {
         boolean isDeleted = bookService.deleteBookById(id);
-        if(isDeleted){
-            return "Book deleted" + id;
-        }else{
-            return  "Not found" + id;
+
+        if (isDeleted) {
+            DeleteBookResponseDTO responseDTO = new DeleteBookResponseDTO("Book deleted", id);
+            return ResponseEntity.ok(responseDTO);  // Return status 200 OK with the response DTO
+        } else {
+            DeleteBookResponseDTO responseDTO = new DeleteBookResponseDTO("Not found", id);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseDTO);  // Return status 404 NOT FOUND with the response DTO
         }
     }
+
 
     @PutMapping("/update/{id}")
     public ResponseEntity<BookDTO> updateBook(@PathVariable String id, @RequestBody BookDTO bookDTO){
